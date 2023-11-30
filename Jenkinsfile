@@ -7,8 +7,8 @@ pipeline{
             steps{
                 script {
                     gitCheckout(
-                    branch: "shared_lib"
-                    url: "https://github.com/muddassir19/jenkins_shared_lib.git"
+                    branch: 'shared_lib'
+                    url: 'https://github.com/muddassir19/jenkins_shared_lib.git'
                 )
                 }
                 //git branch: 'shared_lib', url: 'https://github.com/muddassir19/jenkins_shared_lib.git'
