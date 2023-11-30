@@ -14,5 +14,11 @@ pipeline{
                 //git branch: 'shared_lib', url: 'https://github.com/muddassir19/jenkins_shared_lib.git'
             }
         }
+
+        stage("unit test maven") {
+            steps{
+                
+            }
+        }
     }
 }
