@@ -20,7 +20,7 @@ pipeline{
         stage("unit test maven") {
             steps{
                 script {
-                    sh 'mvn test'
+                    mvnTest()
                 }                
             }
         }
