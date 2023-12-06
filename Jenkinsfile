@@ -49,10 +49,10 @@ pipeline{
             }
         }
         when { expression { param.action == 'create' } }
-        stage("copy file ") {
+        stage("Static Code Analysis: sonarqube ") {
             steps{
                 script{
-                    
+                    staticCodeAnalysis()
                 }
             }
         }
