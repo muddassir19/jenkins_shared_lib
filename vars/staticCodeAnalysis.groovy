@@ -1,3 +1,5 @@
-def call(){
-    sh 'mvn clean package sonar:sonar'
+def call(credID){
+    withSonarQubeEnv(credentialsId: 'credID') {
+        sh 'mvn clean package sonar:sonar'
+    }
 }
