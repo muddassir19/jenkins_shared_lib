@@ -56,11 +56,9 @@ pipeline{
             //when { expression { params.action == 'create' } }
             steps{
                 script{
-                    //def SonarQubecredentialsID = 'sonarqube-api'
-                    withCredentials([string(credentialsId: 'sonarqube', variable: 'sonarcred')]) {
-                        sh 'mvn clean package sonar:sonar'
-                    }
-                    //staticCodeAnalysis(SonarQubecredentialsID)
+
+                    def SonarQubecredentialsID = 'sonarqube'
+                    staticCodeAnalysis(SonarQubecredentialsID)
                 }
             }
         }
