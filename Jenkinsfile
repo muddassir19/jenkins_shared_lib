@@ -9,8 +9,9 @@ pipeline{
     }
     // how to stages condition, done by choice and when condition in every stage
     stages{
-        when { expression { param.action == 'create' } }
+        
         stage("checkout"){
+            when { expression { param.action == 'create' } }
             steps{
                 script {
                     gitCheckout(
@@ -22,8 +23,9 @@ pipeline{
             }
         }
 
-        when { expression { param.action == 'create' } }
+        
         stage("unit test maven") {
+            when { expression { param.action == 'create' } }
             steps{
                 script {
                     sh 'mvn test'
@@ -31,8 +33,8 @@ pipeline{
             }
         }
 
-        when { expression { param.action == 'create' } }
         stage("Integration test maven") {
+            when { expression { param.action == 'create' } }
             steps{
                 script {
                    sh 'mvn verify -DskipUnitTests'
@@ -40,16 +42,18 @@ pipeline{
             }
         }
 
-        when { expression { param.action == 'create' } }
+        
         stage("maven Build") {
+            when { expression { param.action == 'create' } }
             steps{
                 script {
                    sh 'mvn clean package'
                 }                
             }
         }
-        when { expression { param.action == 'create' } }
+        
         stage("Static Code Analysis: sonarqube ") {
+            when { expression { param.action == 'create' } }
             steps{
                 script{
                     staticCodeAnalysis()
