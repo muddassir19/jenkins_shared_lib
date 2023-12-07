@@ -50,5 +50,16 @@ pipeline {
                 }
             }
         }
+        stage('copy file to docker-sever: sshagent'){
+            steps{
+                script{
+                    sshagent(['docker-server']) {
+                       sh 'ssh -o StrictHostKeyChecking=no ec2-user@3.110.32.119'
+                       sh 'scp /var/lib/jenkins/workspace/ci-cd/target/*.war  ec2-user@3.110.32.119:/home/ec2-user'
+
+                    }
+                }
+            }
+        }
     }
 }
