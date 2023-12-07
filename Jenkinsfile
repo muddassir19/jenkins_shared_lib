@@ -34,5 +34,12 @@ pipeline {
                 }
             }
         }
+        stage('Quality Gate Analysis: Sonarqube'){
+            steps{
+                script{
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
+                }
+            }
+        }
     }
 }
