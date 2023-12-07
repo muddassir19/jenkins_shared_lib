@@ -34,12 +34,19 @@ pipeline {
                 }
             }
         }
-        stage('Quality Gate Analysis: Sonarqube'){
+        stage('Quality Gate Status Check: Sonarqube'){
             steps{
                 script{
                     timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
                     }
+                }
+            }
+        }
+        stage('Maven Build: maven'){
+            steps{
+                script{
+                    sh 'mvn clean install'
                 }
             }
         }
