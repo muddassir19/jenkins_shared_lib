@@ -37,7 +37,9 @@ pipeline {
         stage('Quality Gate Analysis: Sonarqube'){
             steps{
                 script{
+                    timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
+                    }
                 }
             }
         }
