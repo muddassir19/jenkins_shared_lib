@@ -4,7 +4,7 @@ pipeline {
         maven 'maven3'
     }
     environment{
-        DOCKER_SERVER = ""
+        DOCKER_SERVER = "3.110.147.61"
 
     }
     stages {
