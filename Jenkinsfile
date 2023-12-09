@@ -85,5 +85,17 @@ pipeline {
                 }
             }
         }
+        stage('Docker image scan:Trivy'){
+            steps{
+                script{
+                    sshagent(['docker-server']) {
+                    
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'trivy image ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest > scan.txt'"
+                                     
+
+                    }
+                }
+            }
+        }
     }
 }
