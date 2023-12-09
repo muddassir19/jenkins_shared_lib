@@ -64,6 +64,8 @@ pipeline {
                        sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER}'
                        sh 'scp /var/lib/jenkins/workspace/ci-cd/target/*.war  ec2-user@${DOCKER_SERVER}:/home/ec2-user'
                        sh 'scp Dockerfile  ec2-user@${DOCKER_SERVER}:/home/ec2-user'
+                       sh 'chmod -R 777 Dockerfile'
+                       
 
                     }
                 }
