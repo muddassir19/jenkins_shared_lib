@@ -5,6 +5,9 @@ pipeline {
     }
     environment{
         DOCKER_SERVER = "3.110.147.61"
+        DOCKER_REPO = "muddassir19"
+        DOCKER_IMAGE = "webapp"
+        DOCKER_TAG = "v1"
 
     }
     stages {
@@ -66,18 +69,20 @@ pipeline {
                 }
             }
         }
-        // stage('Docker build:Docker'){
-        //     steps{
-        //         script{
-        //             sshagent(['docker-server']) {
-        //             sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER}'
-        //             sh """
-        //                 docker build -t
-        //             """
+        stage('Docker build:Docker'){
+            steps{
+                script{
+                    sshagent(['docker-server']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER}'
+                    sh """
+                        docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} .
+                        docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest
+                    """
 
-        //             }
-        //         }
-        //     }
-        // }
+                    }
+                }
+            }
+        }
     }
 }
