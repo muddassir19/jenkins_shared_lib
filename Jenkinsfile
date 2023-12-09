@@ -4,8 +4,8 @@ pipeline {
         maven 'maven3'
     }
     environment{
-        WAR_FILE = "/var/lib/jenkins/workspace/ci-cd/target/*.war"
-        DOCKER_SERVER = "3.110.147.61"
+        WAR_FILE = "/var/lib/jenkins/workspace/ci-cd/target/myweb-0.0.7-SNAPSHOT.war"
+        DOCKER_SERVER = "13.233.165.11"
         DOCKER_REPO = "muddassir19"
         DOCKER_IMAGE = "webapp"
         DOCKER_TAG = "v1"
