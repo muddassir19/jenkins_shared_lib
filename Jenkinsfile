@@ -64,7 +64,7 @@ pipeline {
                        sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER}'
                        sh 'scp /var/lib/jenkins/workspace/ci-cd/target/*.war  ec2-user@${DOCKER_SERVER}:/home/ec2-user'
                        sh 'scp Dockerfile  ec2-user@${DOCKER_SERVER}:/home/ec2-user'
-                       sh 'chmod -R 777 Dockerfile'
+                       sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} chmod -R 777 /home/ec2-user/Dockerfile'
                        
 
                     }
@@ -75,11 +75,10 @@ pipeline {
             steps{
                 script{
                     sshagent(['docker-server']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER}'
-                    sh 'docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} .'
-                    sh 'docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
-                    sh 'docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest '
                     
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} /home/ec2-user'"
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
+                                     
 
                     }
                 }
