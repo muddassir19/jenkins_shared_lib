@@ -74,11 +74,10 @@ pipeline {
                 script{
                     sshagent(['docker-server']) {
                     sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER}'
-                    sh """
-                        docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} .
-                        docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest
-                    """
+                    sh 'docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} .'
+                    sh 'docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
+                    sh 'docker image tag  ${DOCKER_REPO}/${DOCKER_IMAGE}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest '
+                    
 
                     }
                 }
