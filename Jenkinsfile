@@ -4,6 +4,7 @@ pipeline {
         maven 'maven3'
     }
     environment{
+        WAR_FILE = "/var/lib/jenkins/workspace/ci-cd/target/*.war"
         DOCKER_SERVER = "3.110.147.61"
         DOCKER_REPO = "muddassir19"
         DOCKER_IMAGE = "webapp"
@@ -62,7 +63,7 @@ pipeline {
                 script{
                     sshagent(['docker-server']) {
                        sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER}'
-                       sh 'scp /var/lib/jenkins/workspace/ci-cd/target/*.war  ec2-user@${DOCKER_SERVER}:/home/ec2-user'
+                       sh 'scp ${WAR_FILE} ec2-user@${DOCKER_SERVER}:/home/ec2-user'
                        sh 'scp Dockerfile  ec2-user@${DOCKER_SERVER}:/home/ec2-user'
                        sh 'ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} chmod -R 777 /home/ec2-user/Dockerfile'
                        
@@ -76,8 +77,8 @@ pipeline {
                 script{
                     sshagent(['docker-server']) {
                     
-                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} /home/ec2-user'"
-                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} .'"
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
                                      
 
                     }
