@@ -81,6 +81,8 @@ pipeline {
                              // Use SSH to execute Docker build commands on docker-host
                             sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker build -t ${ECR_REPO_NAME} .'"
                             sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker tag ${ECR_REPO_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${ECR_REPO_NAME}:latest'"
+                        }
+                    } catch (Exception buildError) {
                         // Catch any exception that occurs during the Docker build
                         echo "Error during Docker build: ${buildError.message}"
                         currentBuild.result = 'FAILURE'
