@@ -107,9 +107,11 @@ pipeline {
                     // }
                     // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                     // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'
+                    sshagent(['docker-server']) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker login -u ${DOCKER_HUB_USER} -p \${DOCKER_HUB_PASSWD_CRED}'"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
+                    }                
                 }
             }
         }
