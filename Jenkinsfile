@@ -10,7 +10,7 @@ pipeline {
         DOCKER_IMAGE = "webapp"
         DOCKER_TAG = "v1"
         DOCKER_HUB_USER = "muddassir19"
-        DOCKER_HUB_PASSWD_CRED = 'docker-hub-passwd'
+        DOCKER_HUB_PASSWD_CRED = 'Muddassir*9'
 
     }
     stages {
