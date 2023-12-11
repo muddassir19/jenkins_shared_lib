@@ -10,7 +10,7 @@ pipeline {
         DOCKER_IMAGE = "webapp"
         DOCKER_TAG = "v1"
         DOCKER_HUB_USER = "muddassir19"
-        //DOCKER_HUB_PASSWD_CRED = 'docker-hub-passwd'
+        
 
     }
     stages {
@@ -95,6 +95,17 @@ pipeline {
                     sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'trivy image   ${DOCKER_REPO}/${DOCKER_IMAGE}:latest > scan.txt'"
                                      
 
+                    }
+                }
+            }
+        }
+        stage('Remove Previous Docker Images:Docker'){
+            steps{
+                script{
+                    sshagent(['docker-server']) {
+                        // Remove the previous Docker image
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} || true'"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:latest || true'"
                     }
                 }
             }
