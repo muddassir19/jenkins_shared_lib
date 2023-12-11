@@ -101,11 +101,14 @@ pipeline {
         stage('Docker Image push:Docker-hub'){
             steps{
                 script{
-                    withCredentials([usernameColonPassword(credentialsId: 'docker-hub-cred', variable: 'docker-hub')]) {
-                        sh "docker login -u ${DOCKER_HUB_USER} -p ${docker-hub}"
-                    }
-                    sh "docker image push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}"
-                    sh "docker image push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest"
+                    // withCredentials([usernameColonPassword(credentialsId: 'docker-hub-cred', variable: 'docker-hub')]) {
+                    //     sh "docker login -u ${DOCKER_HUB_USER} -p ${docker-hub}"
+                    // }
+                    // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
+                    // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker login -u ${DOCKER_HUB_USER} -p \${docker-hub-cred}'"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
                 }
             }
         }
