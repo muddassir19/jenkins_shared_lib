@@ -77,13 +77,17 @@ pipeline {
         stage('Docker build:Docker'){
             steps{
                 script{
-                    sshagent(['docker-server']) {
-                    
-                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} .'"
-                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker tag  ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
-                                     
-
-                      }
+                    try{
+                        sshagent(['docker-server']) {
+                             // Use SSH to execute Docker build commands on docker-host
+                            sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker build -t ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} .'"
+                            sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'cd /home/ec2-user && docker tag  ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}  ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
+                        }
+                    } catch (Exception buildError) {
+                        // Catch any exception that occurs during the Docker build
+                        echo "Error during Docker build: ${buildError.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
                 }
             }
         }
@@ -118,7 +122,7 @@ pipeline {
 
                             // Try to remove the previous Docker images
                             try{
-                                sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} || true'"
+                                sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAGS} || true'"
                                 sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:latest || true'"
                             } catch (Exception removeError) {
                                 echo "Error removing previous Docker images: ${removeError.message}"
