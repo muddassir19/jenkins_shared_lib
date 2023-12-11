@@ -106,7 +106,7 @@ pipeline {
                     // }
                     // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                     // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'
-                    sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker login -u ${DOCKER_HUB_USER} -p \${docker-hub-cred}'"
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker login -u ${DOCKER_HUB_USER} -p \${docker-hub-passwd}'"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
                 }
