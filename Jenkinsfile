@@ -10,7 +10,7 @@ pipeline {
         DOCKER_IMAGE = "webapp"
         DOCKER_TAG = "v1"
         DOCKER_HUB_USER = "muddassir19"
-        DOCKER_HUB_PASSWD_CRED = 'Muddassir*9'
+        //DOCKER_HUB_PASSWD_CRED = 'docker-hub-passwd'
 
     }
     stages {
@@ -108,8 +108,8 @@ pipeline {
                     // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                     // sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'
                     // Use SSH to execute Docker commands on Docker-host
-                    sshagent(['docker-server', DOCKER_HUB_PASSWD_CRED]) {
-                        sh """ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} "docker login -u ${DOCKER_HUB_USER} -p \${DOCKER_HUB_PASSWD_CRED}" """
+                    sshagent(['docker-server']) {
+                        sh """ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} "docker login -u ${DOCKER_HUB_USER} -p \${docker-hub-passwd}" """
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
                     }                
