@@ -5,10 +5,11 @@ pipeline {
     }
     environment{
         WAR_FILE = "/var/lib/jenkins/workspace/ci-cd/target/myweb-0.0.7-SNAPSHOT.war"
-        DOCKER_SERVER = "13.233.165.11"
+        DOCKER_SERVER = "3.108.228.66"
         DOCKER_REPO = "muddassir19"
         DOCKER_IMAGE = "webapp"
         DOCKER_TAG = "v1"
+        DOCKER_HUB_USER = "muddassir19"
 
     }
     stages {
@@ -95,6 +96,17 @@ pipeline {
 
                     }
                 }
+            }
+        }
+        stage('Docker Image push:Docker-hub'){
+            steps{
+                script{
+                    withCredentials([usernameColonPassword(credentialsId: 'docker-hub-cred', variable: 'docker-hub')]) {
+                        sh "docker login -u ${DOCKER_HUB_USER} -p ${docker-hub}"
+                    }
+                    sh "docker image push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    sh "docker image push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest"
+                }}
             }
         }
     }
