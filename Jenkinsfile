@@ -122,7 +122,7 @@ pipeline {
 
                             // Try to remove the previous Docker images
                             try{
-                                sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAGS} || true'"
+                                sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} || true'"
                                 sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:latest || true'"
                             } catch (Exception removeError) {
                                 echo "Error removing previous Docker images: ${removeError.message}"
