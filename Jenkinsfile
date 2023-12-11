@@ -99,17 +99,7 @@ pipeline {
                 }
             }
         }
-        stage('Remove Previous Docker Images:Docker'){
-            steps{
-                script{
-                    sshagent(['docker-server']) {
-                        // Remove the previous Docker image
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} || true'"
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:latest || true'"
-                    }
-                }
-            }
-        }
+       
         stage('Docker Image push:Docker-hub'){
             steps{
                 script{
@@ -125,10 +115,29 @@ pipeline {
                             sh """ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} "docker login -u ${DOCKER_HUB_USER} -p '${DOCKER_HUB_PASSWD}'" """
                             sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'"
                             sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest'"
+
+                            // Try to remove the previous Docker images
+                            try{
+                                sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} || true'"
+                                sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:latest || true'"
+                            } catch (Exception removeError) {
+                                echo "Error removing previous Docker images: ${removeError.message}"
+                            }
                         }
                     }                    
                 }
             }
         }
+        //  stage('Remove Previous Docker Images:Docker'){
+        //     steps{
+        //         script{
+        //             sshagent(['docker-server']) {
+        //                 // Remove the previous Docker image
+        //                 sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} || true'"
+        //                 sh "ssh -o StrictHostKeyChecking=no ec2-user@${DOCKER_SERVER} 'docker rmi ${DOCKER_REPO}/${DOCKER_IMAGE}:latest || true'"
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
