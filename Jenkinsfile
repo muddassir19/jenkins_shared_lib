@@ -106,7 +106,7 @@ pipeline {
                     }
                     sh "docker image push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}"
                     sh "docker image push ${DOCKER_REPO}/${DOCKER_IMAGE}:latest"
-                }}
+                }
             }
         }
     }
