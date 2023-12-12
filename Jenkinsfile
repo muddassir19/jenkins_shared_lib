@@ -143,5 +143,23 @@ pipeline {
                 }
             }
         }
+        stage('Deployment on EKS cluster:K8S'){
+            steps{
+                script{
+                    def apply = false
+
+                    try{
+                        input message: 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
+                        apply = true
+                    } catch(err){
+                        apply = false
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                    if(apply){
+                        sh "kubectl apply -f ."
+                    }
+                }
+            }
+        }
     }
 }
