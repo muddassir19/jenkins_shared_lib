@@ -11,6 +11,7 @@ pipeline {
         ECR_REPO_NAME = "javawebapp"
         ACCESS_KEY = credentials('AWS_ACCESS_KEY_ID')
         SECRET_KEY = credentials('AWS_SECRET_KEY_ID')
+        EKS_CLUSTER = "demo-cluster1"
 
     }
     stages {
@@ -129,6 +130,16 @@ pipeline {
                         sh  "terraform apply -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION' --var-file=./config/terraform.tfvars --auto-approve"
                         
                     }   
+                }
+            }
+        }
+        stage('Connect to Eks:EKS'){
+            steps{
+                script{
+                    sh "aws configure set aws_access_key_id $ACCESS_KEY"
+                    sh "aws configure set aws_secret_access_key $SECRET_KEY"
+                    sh "aws configure set region $REGION"
+                    sh "aws eks --region $REGION update-kubeconfig --name $EKS_CLUSTER"
                 }
             }
         }
