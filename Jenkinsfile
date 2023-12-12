@@ -5,11 +5,12 @@ pipeline {
     }
     environment{
         WAR_FILE = "/var/lib/jenkins/workspace/ci-cd/target/myweb-0.0.7-SNAPSHOT.war"
-        DOCKER_SERVER = "3.108.228.66"
+        DOCKER_SERVER = "13.127.65.143"
         REGION = "ap-south-1"
         AWS_ACCOUNT_ID = "924308295341"
         ECR_REPO_NAME = "javawebapp"
-        
+        ACCESS_KEY = credentials('AWS_ACCESS_KEY_ID')
+        SECRET_KEY = credentials('AWS_SECRET_KEY_ID')
 
     }
     stages {
@@ -115,6 +116,20 @@ pipeline {
                             echo "Error removing previous Docker images: ${removeError.message}"
                         }
                     }                    
+                }
+            }
+        }
+        stage('Create Eks cluster: Terraform'){
+            steps{
+                script{
+                    dir('eks_module') {
+                        sh """
+                            terraform int
+                            terraform fmt
+                            terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION' --var-file=./config/terraform.tfvars
+                            terraform apply -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION' --var-file=./config/terraform.tfvars --auto-approve
+                        """
+                    }   
                 }
             }
         }
