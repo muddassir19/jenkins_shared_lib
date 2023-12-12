@@ -123,12 +123,11 @@ pipeline {
             steps{
                 script{
                     dir('eks_module') {
-                        sh """
-                            terraform init
-                            terraform fmt
-                            terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION' --var-file=./config/terraform.tfvars
-                            terraform apply -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION' --var-file=./config/terraform.tfvars --auto-approve
-                        """
+                        sh "terraform init"
+                        sh  "terraform fmt"
+                        sh  "terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION' --var-file=./config/terraform.tfvars"
+                        sh  "terraform apply -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION' --var-file=./config/terraform.tfvars --auto-approve"
+                        
                     }   
                 }
             }
