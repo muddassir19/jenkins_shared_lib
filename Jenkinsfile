@@ -133,33 +133,42 @@ pipeline {
                 }
             }
         }
-        stage('Connect to Eks:EKS'){
+        stage('Destroy EKS cluster'){
             steps{
                 script{
-                    sh "aws configure set aws_access_key_id $ACCESS_KEY"
-                    sh "aws configure set aws_secret_access_key $SECRET_KEY"
-                    sh "aws configure set region $REGION"
-                    sh "aws eks --region $REGION update-kubeconfig --name $EKS_CLUSTER"
+                    dir('eks_module'){
+                        sh "terraform destroy --auto-approve"
+                    }
                 }
             }
         }
-        stage('Deployment on EKS cluster:K8S'){
-            steps{
-                script{
-                    def apply = false
+        // stage('Connect to Eks:EKS'){
+        //     steps{
+        //         script{
+        //             sh "aws configure set aws_access_key_id $ACCESS_KEY"
+        //             sh "aws configure set aws_secret_access_key $SECRET_KEY"
+        //             sh "aws configure set region $REGION"
+        //             sh "aws eks --region $REGION update-kubeconfig --name $EKS_CLUSTER"
+        //         }
+        //     }
+        // }
+        // stage('Deployment on EKS cluster:K8S'){
+        //     steps{
+        //         script{
+        //             def apply = false
 
-                    try{
-                        input message: 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
-                        apply = true
-                    } catch(err){
-                        apply = false
-                        currentBuild.result = 'UNSTABLE'
-                    }
-                    if(apply){
-                        sh "kubectl apply -f ."
-                    }
-                }
-            }
-        }
+        //             try{
+        //                 input message: 'please confirm to deploy on eks', ok: 'Ready to apply the config ?'
+        //                 apply = true
+        //             } catch(err){
+        //                 apply = false
+        //                 currentBuild.result = 'UNSTABLE'
+        //             }
+        //             if(apply){
+        //                 sh "kubectl apply -f ."
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
