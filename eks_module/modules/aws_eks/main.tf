@@ -3,6 +3,8 @@ resource "aws_eks_cluster" "eks" {
    # The Amazon Resource Name (ARN) of the IAM role that provides permissions for 
   # the Kubernetes control plane to make calls to AWS API operations on your behalf
   role_arn = aws_iam_role.eks_cluster.arn   
+  # Desired Kubernetes master version
+  version = "1.24"
   vpc_config {
   subnet_ids = var.subnet_ids
   }
