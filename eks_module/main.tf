@@ -3,7 +3,7 @@ module "aws_eks_cluster" {
   for_each = var.aws_eks_cluster_config
 
   eks_cluster_name = each.value.eks_cluster_name
-  subnet_ids = each.value.subnet_ids
+  subnet_ids = each.value.eks_subnet_ids
   tags = each.value.tags
 }
 
