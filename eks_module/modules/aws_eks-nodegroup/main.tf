@@ -50,25 +50,23 @@ resource "aws_eks_node_group" "nodes_general" {
 
 # Create IAM role for EKS Node Group
 resource "aws_iam_role" "nodes_general" {
-  # The name of the role
   name = var.node_group_name
-
-   # The policy that grants an entity permission to assume the role.
-   assume_role_policy = <<POLICY
-   {
-    "Version": "2012-10-17",
-    "Statement": [
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
       {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
+          "Effect": "Allow",
+          "Principal": {
+              "Service": "eks.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
       }
-    ]
-  }
-  POLICY
+  ]
 }
+POLICY
+}
+
 
 resource "aws_iam_role_policy_attachment" "amazon_eks_worker_node_policy_general" {
   # The ARN of the policy you want to apply.
